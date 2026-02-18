@@ -13,16 +13,27 @@ public class CorsConfig {
 
     @Bean
     public CorsFilter corsFilter() {
+
         CorsConfiguration config = new CorsConfiguration();
 
-        config.setAllowedOrigins(List.of("http://localhost:3000"));
+        // Allow all origins (safe for development / small projects)
+        config.setAllowedOriginPatterns(List.of("*"));
+
+        // Allow all standard HTTP methods
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+
+        // Allow all headers
+        config.setAllowedHeaders(List.of("*"));
+
+        // Expose Authorization header (needed for JWT)
         config.setExposedHeaders(List.of("Authorization"));
-        config.setAllowCredentials(true);
+
+        // IMPORTANT: must be false when using "*"
+        config.setAllowCredentials(false);
 
         UrlBasedCorsConfigurationSource source =
                 new UrlBasedCorsConfigurationSource();
+
         source.registerCorsConfiguration("/**", config);
 
         return new CorsFilter(source);
